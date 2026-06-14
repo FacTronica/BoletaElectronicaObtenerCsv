@@ -1,460 +1,243 @@
-# 🚀 ERP Factronica API
+# 🚀 API Obtener Listado de Boletas Electrónicas Emitidas
 
-![Version](https://img.shields.io/badge/version-2026-blue.svg)
-![PHP](https://img.shields.io/badge/PHP-5.6%2B-777BB4.svg)
-![REST API](https://img.shields.io/badge/API-REST-success.svg)
-![License](https://img.shields.io/badge/license-Commercial-red.svg)
+![Factronica API](https://img.shields.io/badge/API-Factronica-blue)
+![JSON](https://img.shields.io/badge/Formato-JSON-success)
+![CSV](https://img.shields.io/badge/Exportación-CSV-orange)
+![SII Chile](https://img.shields.io/badge/SII-Chile-red)
 
-## 📌 Descripción
+## 📖 Descripción
 
-**ERP Factronica API** es una plataforma de integración empresarial diseñada para automatizar procesos administrativos, tributarios, comerciales y operacionales en Chile.
+La API **Obtener Listado de Boletas Electrónicas Emitidas** permite consultar desde SII Chile el listado de boletas electrónicas emitidas por una empresa para un período determinado.
 
-La API permite conectar sistemas ERP, CRM, Ecommerce, aplicaciones móviles, sistemas contables y plataformas externas mediante servicios REST JSON.
+La consulta requiere:
 
-Fue desarrollada para integrarse con:
+- Token de acceso API
+- RUT empresa
+- Clave SII empresa
+- Período (AñoMes)
+- Tipo de documento
 
-* Servicio de Impuestos Internos (SII Chile)
-* Poder Judicial de Chile
-* WhatsApp Business
-* PrestaShop
-* Sistemas Contables
-* Sistemas de Remuneraciones
-* Aplicaciones Móviles
-* Sistemas de Gestión Empresarial
+### Características
+
+- ✅ Consulta automática al SII
+- ✅ No requiere certificado digital
+- ✅ Retorna resultados en JSON
+- ✅ Genera archivo CSV descargable
+- ✅ Compatible con integraciones ERP, Contabilidad y Auditoría
+- ✅ Ideal para conciliación de información entre sistemas internos y SII
 
 ---
 
-# 🎯 Características Principales
+# 📑 Documentos Soportados
 
-### ✅ Arquitectura Multiempresa
+| Tipo DTE | Documento |
+|-----------|------------|
+| 39 | Boleta Electrónica Afecta |
+| 41 | Boleta Electrónica Exenta |
 
-Una sola instalación permite operar múltiples empresas de forma independiente.
+---
+
+# 🔄 Flujo de Integración
 
 ```text
-Cliente
-   │
-   ▼
-API Factronica
-   │
-   ├── Empresa A
-   ├── Empresa B
-   ├── Empresa C
-   └── Empresa N
+1. Crear petición JSON
+        ↓
+2. Enviar solicitud al Endpoint
+        ↓
+3. Recibir respuesta JSON
+        ↓
+4. (Opcional) Descargar CSV generado
 ```
 
 ---
 
-### ✅ Arquitectura de 3 Capas
-
-```text
-┌─────────────────────┐
-│ Frontend / APP      │
-└──────────┬──────────┘
-           │ JSON
-           ▼
-┌─────────────────────┐
-│ API REST Factronica │
-└──────────┬──────────┘
-           │ SQL
-           ▼
-┌─────────────────────┐
-│ Base de Datos       │
-└─────────────────────┘
-```
-
----
-
-# 🏗 Estructura del Proyecto
-
-```text
-project/
-│
-├── public/
-│   └── index.php
-│
-├── src/
-│   ├── Core/
-│   │   ├── Database.php
-│   │   ├── Router.php
-│   │   └── Config.php
-│   │
-│   ├── Modules/
-│   │   ├── Usuarios/
-│   │   ├── Clientes/
-│   │   ├── Productos/
-│   │   ├── Ventas/
-│   │   ├── Compras/
-│   │   ├── Tesoreria/
-│   │   ├── CRM/
-│   │   ├── DTE/
-│   │   ├── SII/
-│   │   ├── Whatsapp/
-│   │   └── Prestashop/
-│
-├── temp/
-├── logs/
-├── vendor/
-└── autoload.php
-```
-
----
-
-# 🔐 Autenticación
-
-Todas las peticiones requieren Token de Acceso.
+# 🌐 Endpoint
 
 ```http
-Authorization: Bearer TOKEN_API
+POST https://dev.factronica.cl/api/sii_herramientas_boletaobtenerlistado/index.php
 ```
 
-Ejemplo:
+---
+
+# 📥 Petición
+
+## JSON de Entrada
+
+```json
+{
+    "TOKEN": "-token-acceso-api-",
+    "RUT": "-rut-empresa-",
+    "Clave": "-aqui-clave-sii-empresa",
+    "Periodo": "202602",
+    "CodTipoDoc": "3941"
+}
+```
+
+### Parámetros
+
+| Campo | Tipo | Descripción |
+|---------|---------|-------------|
+| TOKEN | String | Token de acceso API |
+| RUT | String | RUT empresa |
+| Clave | String | Clave SII empresa |
+| Periodo | String | AñoMes (YYYYMM) |
+| CodTipoDoc | String | Tipo documento a consultar |
+
+---
+
+# 💻 Ejemplo CURL
 
 ```bash
-curl -X GET \
-https://api.factronica.cl/clientes \
--H "Authorization: Bearer TOKEN_API"
+curl -X POST "https://dev.factronica.cl/api/sii_herramientas_boletaobtenerlistado/index.php" \
+-H "Content-Type: application/json" \
+-d '{
+    "TOKEN":"-token-acceso-api-",
+    "RUT":"-rut-empresa-",
+    "Clave":"-aqui-clave-sii-empresa",
+    "Periodo":"202602",
+    "CodTipoDoc":"3941"
+}'
 ```
 
 ---
 
-# 📡 Formato de Peticiones
+# 📂 Envío desde Archivo TXT
 
-## Request
+Guardar el JSON en un archivo:
 
-```json
-{
-  "TOKEN":"xxxxxxxx",
-  "RUT":"76479984-4"
-}
+```txt
+datos_json.txt
 ```
 
-## Response
+Luego ejecutar:
 
-```json
-{
-  "codigo":"200",
-  "estado":"OK",
-  "mensaje":"Proceso ejecutado correctamente"
-}
+```bash
+curl -X POST "https://dev.factronica.cl/api/sii_herramientas_boletaobtenerlistado/index.php" \
+-H "Content-Type: application/json" \
+-d @datos_json.txt
 ```
 
 ---
 
-# 📦 Módulos Disponibles
-
-## 👥 Clientes
-
-* Crear Cliente
-* Modificar Cliente
-* Eliminar Cliente
-* Listar Clientes
-
----
-
-## 📦 Productos
-
-* Crear Producto
-* Actualizar Producto
-* Inventario
-* Stock
-* Categorías
-* Marcas
-
----
-
-## 🛒 Ventas
-
-* Cotizaciones
-* Pedidos
-* Facturas
-* Boletas
-* Notas de Crédito
-
----
-
-## 🚚 Compras
-
-* Órdenes de Compra
-* Recepción Mercadería
-* Facturas de Compra
-
----
-
-## 💰 Tesorería
-
-* Ingresos
-* Egresos
-* Recaudaciones
-* Conciliación
-
----
-
-## 👨‍💼 CRM
-
-* Prospectos
-* Clientes
-* Oportunidades
-* Actividades
-
----
-
-# 🇨🇱 Integración SII Chile
-
-## Funcionalidades
-
-### DTE
-
-* Factura Electrónica
-* Factura Exenta
-* Nota Crédito
-* Nota Débito
-* Guía Despacho
-
-### Consulta Tributaria
-
-* F29
-* Boletas Electrónicas
-* Contribuyentes
-* Correo Intercambio
-
-### Autenticación
+# 📤 Respuesta Exitosa
 
 ```json
 {
-  "RutEmpresa":"76618820-6",
-  "Clave":"********"
-}
-```
-
-Retorna:
-
-```json
-{
-  "codigo":"200",
-  "estado":"OK",
-  "token":"TOKEN_SII"
+  "codigo": "200",
+  "estado": "OK",
+  "total_boletas": 4,
+  "boletas": [
+    {
+      "item": 1,
+      "tipo_doc": "39",
+      "rut_receptor": "66666666-6",
+      "fecha_documento": "02/02/2026",
+      "folio": "535",
+      "monto_neto": 28000,
+      "monto_iva": 5320,
+      "monto_exento": 0,
+      "monto_total": 33320
+    }
+  ],
+  "totales": {
+    "monto_neto": 728997,
+    "monto_iva": 138510,
+    "monto_exento": 0,
+    "monto_total": 867507
+  },
+  "csv_temp": {
+    "generado": true,
+    "nombre_archivo": "boletas_400507138.csv",
+    "url_public": "https://dev.factronica.cl/temp/boletas_400507138.csv"
+  }
 }
 ```
 
 ---
 
-# 🧾 API Boletas Electrónicas
+# 📊 Estructura de Respuesta
 
-Consulta masiva de boletas emitidas registradas en SII.
+## Datos Generales
 
-## Endpoint
+| Campo | Descripción |
+|---------|-------------|
+| codigo | Código de resultado |
+| estado | Estado de la operación |
+| total_boletas | Cantidad de registros encontrados |
 
-```http
-POST /api/sii_herramientas_boletaobtenerlistado
-```
+## Totales
 
-## Request
+| Campo | Descripción |
+|---------|-------------|
+| monto_neto | Total neto período |
+| monto_iva | Total IVA período |
+| monto_exento | Total exento período |
+| monto_total | Total general período |
+
+---
+
+# 📥 Descarga de CSV
+
+Si la respuesta contiene:
 
 ```json
-{
-  "TOKEN":"TOKEN_API",
-  "RUT":"76479984-4",
-  "Clave":"CLAVE_SII",
-  "Periodo":"202602",
-  "CodTipoDoc":"3941"
-}
+"url_public":"https://dev.factronica.cl/temp/boletas_400507138.csv"
 ```
 
-## Response
+Puede descargar el archivo utilizando:
 
-```json
-{
-  "codigo":"200",
-  "estado":"OK",
-  "total_boletas":125
-}
+```bash
+curl -L "https://dev.factronica.cl/temp/boletas_400507138.csv" \
+-o boletas_400507138.csv
 ```
 
 ---
 
-# ⚖️ Integración Poder Judicial Chile
+# 📄 Formato CSV
 
-Consultas automatizadas.
-
-### Penal
-
-```json
-{
-  "nombre":"JUAN",
-  "paterno":"PEREZ",
-  "materno":"SOTO",
-  "anio":2025,
-  "competencia":"penal"
-}
-```
-
-### Civil
-
-```json
-{
-  "nombre":"JUAN",
-  "paterno":"PEREZ",
-  "materno":"SOTO",
-  "anio":2025,
-  "competencia":"civil"
-}
-```
-
-### Ambas
-
-```json
-{
-  "nombre":"JUAN",
-  "paterno":"PEREZ",
-  "materno":"SOTO",
-  "anio":2025,
-  "competencia":"ambas"
-}
+```csv
+Tipo Doc;RUT Receptor;Fecha Docto;Fecha Venc.;Indicador Servicio;Folio;Monto Neto;Monto IVA;Monto Exento;Monto Total
+39;66666666-6;02/02/2026;;3;535;28000;5320;0;33320
+39;66666666-6;12/02/2026;;3;536;57198;10868;0;68066
+39;66666666-6;16/02/2026;;3;537;313590;59582;0;373172
+39;66666666-6;18/02/2026;;3;538;330209;62740;0;392949
 ```
 
 ---
 
-# 💬 Integración WhatsApp
+# 🎯 Casos de Uso
 
-Basado en:
-
-* Baileys
-* Node.js
-* PM2
-
-## Enviar Texto
-
-```json
-{
-  "fono":"56911111111",
-  "mensaje":"Hola Mundo"
-}
-```
-
-## Enviar Archivo
-
-```json
-{
-  "fono":"56911111111",
-  "archivo":"documento.pdf"
-}
-```
+- Validación de información entre ERP y SII.
+- Auditorías tributarias.
+- Integración con sistemas contables.
+- Carga masiva de boletas.
+- Procesos automáticos de conciliación.
+- Control y revisión de documentos electrónicos.
 
 ---
 
-# 🛍 Integración PrestaShop
+# 👥 Público Objetivo
 
-Funciones soportadas:
-
-* Sincronización Productos
-* Categorías
-* Marcas
-* Stock
-* Pedidos
-* Clientes
-
-ERP Factronica actúa como:
-
-```text
-MAESTRO DE DATOS
-```
-
-PrestaShop consume información desde el ERP.
+- Integradores de Sistemas
+- Desarrolladores de Software
+- Contadores
+- Auditores
+- Empresas PyME
+- Plataformas ERP
 
 ---
 
-# 🌐 Ejemplo PHP
+# ⚡ Ventajas
 
-```php
-$payload = array(
-    "TOKEN" => "TOKEN_API",
-    "RUT" => "76479984-4"
-);
-
-$ch = curl_init();
-
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Content-Type: application/json"
-));
-
-$response = curl_exec($ch);
-curl_close($ch);
-
-echo $response;
-```
+- Sin certificado digital.
+- Integración simple mediante JSON.
+- Respuesta estructurada.
+- Descarga CSV incluida.
+- Automatización completa del proceso.
+- Ideal para soluciones SaaS y ERP.
 
 ---
 
-# ⚙️ Requisitos
+## © Factronica API
 
-## Servidor
-
-* Debian 12+
-* Apache 2.4+
-* PHP 5.6+
-* MariaDB 10+
-* OpenSSL
-* CURL
-* JSON
-
----
-
-# 🔒 Seguridad
-
-* Bearer Token
-* Validación de IP
-* HTTPS obligatorio
-* Logs de Auditoría
-* Control de Sesiones
-
----
-
-# 📈 Casos de Uso
-
-### ERP
-
-* Ventas
-* Compras
-* Inventario
-
-### Contabilidad
-
-* Registro automático de documentos
-
-### Ecommerce
-
-* Sincronización PrestaShop
-
-### Integradores
-
-* Consumo REST JSON
-
-### Auditoría
-
-* Validación ERP vs SII
-
----
-
-# 👨‍💻 Soporte
-
-**Factronica ERP**
-
-📧 [contacto@factronica.cl](mailto:contacto@factronica.cl)
-
-🌐 https://www.factronica.cl
-
-📱 +56 9 2621 3032
-
----
-
-# 📄 Licencia
-
-Software Comercial.
-
-Todos los derechos reservados.
-
-© Factronica ERP 2014 - 2026
+Documentación técnica generada a partir del endpoint **Obtener Listado de Boletas Electrónicas Emitidas**.
