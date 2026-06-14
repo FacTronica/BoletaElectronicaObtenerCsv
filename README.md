@@ -240,4 +240,7 @@ Tipo Doc;RUT Receptor;Fecha Docto;Fecha Venc.;Indicador Servicio;Folio;Monto Net
 
 ## © Factronica API
 
-Documentación técnica generada a partir del endpoint **Obtener Listado de Boletas Electrónicas Emitidas**.
+Documentación técnica del endpoint **Obtener Listado de Boletas Electrónicas Emitidas**.  
+Mayor información en: https://www.sistemafactronica.cl/apisiichile_boletaelectronicaobtenerlistado.php  
+Whatsapp: +56926213032  
+Correo: contacto@factronica.cl
